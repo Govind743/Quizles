@@ -1,4 +1,4 @@
-package com.example.quizles
+package Model
 
 /**
  * Created by Govind Yadav on 17-05-2020.
