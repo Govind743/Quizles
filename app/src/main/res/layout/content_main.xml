@@ -15,8 +15,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnOpenPhotoGallery"
@@ -26,8 +25,7 @@
         android:text="Open Gallery"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/btnOpenCamera"
-        />
+        app:layout_constraintTop_toTopOf="@+id/btnOpenCamera" />
 
     <ImageView
         android:id="@+id/imgTaken"
@@ -37,8 +35,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnOpenPhotoGallery"
-        app:srcCompat="@drawable/ic_launcher_foreground"
-        />
+        app:srcCompat="@drawable/ic_launcher_foreground" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -60,16 +57,17 @@
 
             <Button
                 android:id="@+id/button1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="120dp"
+                android:layout_height="60dp"
+                android:elevation="8dp"
                 android:onClick="button1isClicked"
-                android:text="Button1"
-                android:elevation="10dp"/>
+                android:text="Button1" />
 
             <Button
                 android:id="@+id/button2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="120dp"
+                android:layout_height="60dp"
+                android:elevation="8dp"
                 android:onClick="button2isClicked"
                 android:text="Button2" />
         </LinearLayout>
@@ -79,12 +77,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="TextView" />
         </LinearLayout>
 
         <LinearLayout
@@ -94,18 +86,64 @@
 
             <Button
                 android:id="@+id/button3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="120dp"
+                android:layout_height="60dp"
+                android:elevation="8dp"
                 android:onClick="button3isClicked"
                 android:text="Button3" />
 
             <Button
                 android:id="@+id/button4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="120dp"
+                android:layout_height="60dp"
+                android:elevation="8dp"
                 android:onClick="button4isClicked"
                 android:text="Button4" />
         </LinearLayout>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtState"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="47dp"
+        android:gravity="center_horizontal"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btnNextPlant"
+        android:layout_width="300sp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:layout_marginBottom="19dp"
+        android:text="@string/next"
+        app:layout_constraintBottom_toTopOf="@+id/txtState"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgTaken" />
+
+    <TextView
+        android:id="@+id/txtRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="176dp"
+        android:background="@drawable/wrong_image"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/txtWrong"
+        android:layout_width="wrap_content"
+        android:layout_height="60sp"
+        android:background="@drawable/correct_image"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/txtRight" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

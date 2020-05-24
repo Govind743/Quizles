@@ -1,5 +1,7 @@
 package Model
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import java.io.BufferedInputStream
 import java.io.BufferedReader
 import java.io.IOException
@@ -38,5 +40,26 @@ class DownloadingObject {
             urlConnection.disconnect()
         }
         return stringBuilder.toString()
+    }
+
+
+    //This methods Downloads the image from the URL
+    fun downloadPlantPicture(pictureName: String?): Bitmap?{
+
+        var bitmap: Bitmap? = null
+        val picturelink :String = PLANTPLACES_COM + "/photos/$pictureName"
+        val pictureURL = URL(picturelink)
+        val inputStream = pictureURL.openConnection().getInputStream()
+
+        if (inputStream!= null){
+            bitmap= BitmapFactory.decodeStream(inputStream)
+        }
+
+        return bitmap
+    }
+
+    companion object{
+
+        val PLANTPLACES_COM= "https://www.plantplaces.com"
     }
 }
