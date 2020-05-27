@@ -18,6 +18,6 @@ class Plant(var genus:String, var species:String, var cultivar:String, var commo
 
     //Overrides toString() method and displays the text to buttons
     override fun toString(): String {
-        return "$common $species "
+        return "$common "
     }
 }

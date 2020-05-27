@@ -8,34 +8,30 @@ package com.example.quizles
 import Model.DownloadingObject
 import Model.ParsePlantUtility
 import Model.Plant
+import android.R.attr.button
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.ImageDecoder
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.net.NetworkInfo
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.provider.Settings
-import kotlinx.coroutines.*
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.startActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
-import kotlinx.coroutines.GlobalScope
-import java.io.IOException
 
 
 class MainActivity : AppCompatActivity() {
@@ -45,10 +41,10 @@ class MainActivity : AppCompatActivity() {
     private var imgTaken: ImageView? = null
 
     //Instance variables
-    var correctAnswerIndex: Int= 0
+    var correctAnswerIndex: Int = 0
     var correctPlant: Plant? = null
-    var AnsweredCorrectly : Int= 0
-    var AnsweredIncorrectly: Int= 0
+    var AnsweredCorrectly: Int = 0
+    var AnsweredIncorrectly: Int = 0
 
     val CAMERA_REQUEST_CODE = 1000
     val PHOTO_REQUEST_CODE = 2000
@@ -59,7 +55,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
 
-
+        setProgressBar(false)
 
 
         var cameraButton = findViewById<Button>(R.id.btnOpenCamera)
@@ -84,10 +80,11 @@ class MainActivity : AppCompatActivity() {
 
         btnNextPlant.setOnClickListener(View.OnClickListener {
 
+            setProgressBar(true)
             try {
                 val innerClassObject = DownloadingPlantTask()
                 innerClassObject.execute()
-            } catch (e: java.lang.Exception){
+            } catch (e: java.lang.Exception) {
                 e.printStackTrace()
             }
 
@@ -155,6 +152,7 @@ class MainActivity : AppCompatActivity() {
 
     fun button1isClicked(buttonView: View) {
         RightOrWrong(0)
+
     }
 
     fun button2isClicked(buttonView: View) {
@@ -169,6 +167,15 @@ class MainActivity : AppCompatActivity() {
         RightOrWrong(3)
     }
 
+    fun buttonBlinkisClicked(buttonView: View) {
+        val anim: Animation = AlphaAnimation(0.0f, 1.0f)
+        anim.duration = 50 //You can manage the blinking time with this parameter
+
+        anim.startOffset = 20
+        anim.repeatMode = Animation.REVERSE
+        anim.repeatCount = Animation.INFINITE
+        buttonBlink.startAnimation(anim)
+    }
 
     inner class DownloadingPlantTask : AsyncTask<String, Int, List<Plant>>() {
 
@@ -178,10 +185,9 @@ class MainActivity : AppCompatActivity() {
             // Can access background thread. Not user interface thread
 
             val parsePlant = ParsePlantUtility()
-            
+
             return parsePlant.parseJSONDatafromLink()
         }
-
 
 
         override fun onPostExecute(result: List<Plant>?) {
@@ -191,12 +197,12 @@ class MainActivity : AppCompatActivity() {
             var numberofPlants = result?.size ?: 0
 
             //this condition will access the index of plantObject randomly
-            if (numberofPlants> 0){
+            if (numberofPlants > 0) {
 
-                var randomPlantIndexForButton1 : Int= (Math.random() * result!!.size).toInt()
-                var randomPlantIndexForButton2 : Int= (Math.random() * result!!.size).toInt()
-                var randomPlantIndexForButton3 : Int= (Math.random() * result!!.size).toInt()
-                var randomPlantIndexForButton4 : Int= (Math.random() * result!!.size).toInt()
+                var randomPlantIndexForButton1: Int = (Math.random() * result!!.size).toInt()
+                var randomPlantIndexForButton2: Int = (Math.random() * result!!.size).toInt()
+                var randomPlantIndexForButton3: Int = (Math.random() * result!!.size).toInt()
+                var randomPlantIndexForButton4: Int = (Math.random() * result!!.size).toInt()
 
                 //this will get a index and assign that object to the Buttons
 
@@ -212,15 +218,14 @@ class MainActivity : AppCompatActivity() {
                 button3.text = result.get(randomPlantIndexForButton3).toString()
                 button4.text = result.get(randomPlantIndexForButton4).toString()
 
-                correctAnswerIndex= (Math.random()* allrandomPlants.size).toInt()
-                correctPlant= allrandomPlants.get(correctAnswerIndex)
+                correctAnswerIndex = (Math.random() * allrandomPlants.size).toInt()
+                correctPlant = allrandomPlants.get(correctAnswerIndex)
 
                 val downloadingImagetask = DownloadingImagetask()
                 downloadingImagetask.execute(allrandomPlants.get(correctAnswerIndex).picture_name)
             }
         }
     }
-
 
 
     //Check for Internet Connection
@@ -256,34 +261,33 @@ class MainActivity : AppCompatActivity() {
         return result
     }
 
-    private fun RightOrWrong(userguess: Int){
+     private fun RightOrWrong(userguess: Int) {
 
-        when(correctAnswerIndex){
-            0 -> button1.setBackgroundColor(Color.GREEN)
-            1 -> button2.setBackgroundColor(Color.GREEN)
-            2 -> button3.setBackgroundColor(Color.GREEN)
-            3 -> button4.setBackgroundColor(Color.GREEN)
-        }
 
-        if (userguess == correctAnswerIndex){
+         when (correctAnswerIndex) {
+             0 -> button1.setBackgroundColor(Color.GREEN)
+             1 -> button2.setBackgroundColor(Color.GREEN)
+             2 -> button3.setBackgroundColor(Color.GREEN)
+             3 -> button4.setBackgroundColor(Color.GREEN)
+         }
+        if (userguess == correctAnswerIndex) {
             txtState.setText("Right Answer!!")
 
             AnsweredCorrectly++
-            txtRight.setText("$AnsweredCorrectly")
+            txtRightAns.setText("$AnsweredCorrectly")
 
-        }
-        else{
+        } else {
             var correctPlantName = correctPlant.toString()
             txtState.setText("Wrong!! Answer is :  $correctPlantName")
 
             AnsweredIncorrectly++
-            txtWrong.setText("$AnsweredIncorrectly")
-
+            txtWrongAns.setText("$AnsweredIncorrectly")
         }
+
     }
 
     //This class creates a thread for Downloading the plant photos
-    inner class DownloadingImagetask : AsyncTask<String, Int, Bitmap?>(){
+    inner class DownloadingImagetask : AsyncTask<String, Int, Bitmap?>() {
 
         override fun doInBackground(vararg pictureName: String?): Bitmap? {
 
@@ -292,7 +296,7 @@ class MainActivity : AppCompatActivity() {
                 val plantBitmap: Bitmap? = downloadObject.downloadPlantPicture(pictureName[0])
 
                 return plantBitmap
-            }catch (e: java.lang.Exception){
+            } catch (e: java.lang.Exception) {
                 e.printStackTrace()
             }
             return null
@@ -301,7 +305,32 @@ class MainActivity : AppCompatActivity() {
         override fun onPostExecute(result: Bitmap?) {
             super.onPostExecute(result)
 
+            setProgressBar(false)
             imgTaken?.setImageBitmap(result)
         }
     }
+
+    // ProgressBar Visibility
+
+    private fun setProgressBar(show: Boolean) {
+
+        if (show) {
+
+            linearLayoutProgress2.setVisibility(View.VISIBLE)
+            progressBar2.setVisibility(View.VISIBLE)  //To show ProgressBar
+            getWindow().setFlags(
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+            )
+
+        } else if (!show) {
+
+            linearLayoutProgress2.setVisibility(View.GONE)
+            progressBar2.setVisibility(View.GONE)     // To Hide ProgressBar
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+
+        }
+    }
 }
+
