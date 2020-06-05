@@ -8,28 +8,23 @@ package com.example.quizles
 import Model.DownloadingObject
 import Model.ParsePlantUtility
 import Model.Plant
-import android.R.attr.button
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.Color
-import android.graphics.ImageDecoder
+import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.daimajia.androidanimations.library.Techniques
+import com.daimajia.androidanimations.library.YoYo
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
@@ -56,28 +51,28 @@ class MainActivity : AppCompatActivity() {
 
 
         setProgressBar(false)
+        displayUIWidgets(false)
 
 
-        var cameraButton = findViewById<Button>(R.id.btnOpenCamera)
-        openPhotoGallery = findViewById<Button>(R.id.btnOpenPhotoGallery)
+//        var cameraButton = findViewById<Button>(R.id.btnOpenCamera)
+//        openPhotoGallery = findViewById<Button>(R.id.btnOpenPhotoGallery)
         imgTaken = findViewById<ImageView>(R.id.imgTaken)
 
 
-        cameraButton?.setOnClickListener(View.OnClickListener {
-            Toast.makeText(this, "cameraButton was clicked ", Toast.LENGTH_SHORT).show()
-
-            val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE)
-        })
-
-        openPhotoGallery?.setOnClickListener(View.OnClickListener {
-            val photoIntent = Intent(
-                Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-            )
-            startActivityForResult(photoIntent, PHOTO_REQUEST_CODE)
-        })
-
+//        cameraButton?.setOnClickListener(View.OnClickListener {
+//            Toast.makeText(this, "cameraButton was clicked ", Toast.LENGTH_SHORT).show()
+//
+//            val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+//            startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE)
+//        })
+//
+//        openPhotoGallery?.setOnClickListener(View.OnClickListener {
+//            val photoIntent = Intent(
+//                Intent.ACTION_PICK,
+//                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+//            )
+//            startActivityForResult(photoIntent, PHOTO_REQUEST_CODE)
+//        })
         btnNextPlant.setOnClickListener(View.OnClickListener {
 
             setProgressBar(true)
@@ -88,66 +83,68 @@ class MainActivity : AppCompatActivity() {
                 e.printStackTrace()
             }
 
-            button1.setBackgroundColor(Color.LTGRAY)
-            button2.setBackgroundColor(Color.LTGRAY)
-            button3.setBackgroundColor(Color.LTGRAY)
-            button4.setBackgroundColor(Color.LTGRAY)
 
+            val drawable: Drawable =
+                this@MainActivity.getResources().getDrawable(R.drawable.oval, this.getTheme())
+            button1.setBackground(drawable)
+            button2.setBackground(drawable)
+            button3.setBackground(drawable)
+            button4.setBackground(drawable)
         })
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//
+//        if (requestCode == CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
+//
+//            var imageData = data?.getExtras()?.get("data") as Bitmap
+//            imgTaken?.setImageBitmap(imageData)
+//        }
+//
+//        if (requestCode == PHOTO_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
+//
+//            val selectedPhotoUri = data.data
+//            try {
+//                selectedPhotoUri?.let {
+//                    if (Build.VERSION.SDK_INT < 28) {
+//                        val bitmap = MediaStore.Images.Media.getBitmap(
+//                            this.contentResolver, selectedPhotoUri
+//                        )
+//                        imgTaken?.setImageBitmap(bitmap)
+//                    } else {
+//                        val source =
+//                            ImageDecoder.createSource(this.contentResolver, selectedPhotoUri)
+//                        val bitmap = ImageDecoder.decodeBitmap(source)
+//                        imgTaken?.setImageBitmap(bitmap)
+//                    }
+//                }
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//            }
+//        }
+//    }
 
-        if (requestCode == CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
-
-            var imageData = data?.getExtras()?.get("data") as Bitmap
-            imgTaken?.setImageBitmap(imageData)
-        }
-
-        if (requestCode == PHOTO_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
-
-            val selectedPhotoUri = data.data
-            try {
-                selectedPhotoUri?.let {
-                    if (Build.VERSION.SDK_INT < 28) {
-                        val bitmap = MediaStore.Images.Media.getBitmap(
-                            this.contentResolver, selectedPhotoUri
-                        )
-                        imgTaken?.setImageBitmap(bitmap)
-                    } else {
-                        val source =
-                            ImageDecoder.createSource(this.contentResolver, selectedPhotoUri)
-                        val bitmap = ImageDecoder.decodeBitmap(source)
-                        imgTaken?.setImageBitmap(bitmap)
-                    }
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
-
-    fun imgViewClicked(view: View) {
-        val randomNumber = (Math.random() * 6).toInt() + 1
-        Log.i("TAG", "The random number is: $randomNumber")
-
-        when (randomNumber) {
-            1 -> btnOpenCamera.setBackgroundColor(Color.RED)
-
-            2 -> btnOpenCamera.setBackgroundColor(Color.GREEN)
-
-            3 -> btnOpenCamera.setBackgroundColor(Color.BLUE)
-
-            4 -> btnOpenCamera.setBackgroundColor(Color.BLACK)
-
-            5 -> btnOpenCamera.setBackgroundColor(Color.MAGENTA)
-
-            6 -> btnOpenCamera.setBackgroundColor(Color.YELLOW)
-
-
-        }
-    }
+//    fun imgViewClicked(view: View) {
+//        val randomNumber = (Math.random() * 6).toInt() + 1
+//        Log.i("TAG", "The random number is: $randomNumber")
+//
+//        when (randomNumber) {
+//            1 -> btnOpenCamera.setBackgroundColor(Color.RED)
+//
+//            2 -> btnOpenCamera.setBackgroundColor(Color.GREEN)
+//
+//            3 -> btnOpenCamera.setBackgroundColor(Color.BLUE)
+//
+//            4 -> btnOpenCamera.setBackgroundColor(Color.BLACK)
+//
+//            5 -> btnOpenCamera.setBackgroundColor(Color.MAGENTA)
+//
+//            6 -> btnOpenCamera.setBackgroundColor(Color.YELLOW)
+//
+//
+//        }
+//    }
 
 
     fun button1isClicked(buttonView: View) {
@@ -167,15 +164,15 @@ class MainActivity : AppCompatActivity() {
         RightOrWrong(3)
     }
 
-    fun buttonBlinkisClicked(buttonView: View) {
-        val anim: Animation = AlphaAnimation(0.0f, 1.0f)
-        anim.duration = 50 //You can manage the blinking time with this parameter
-
-        anim.startOffset = 20
-        anim.repeatMode = Animation.REVERSE
-        anim.repeatCount = Animation.INFINITE
-        buttonBlink.startAnimation(anim)
-    }
+//    fun buttonBlinkisClicked(buttonView: View) {
+//        val anim: Animation = AlphaAnimation(0.0f, 1.0f)
+//        anim.duration = 50 //You can manage the blinking time with this parameter
+//
+//        anim.startOffset = 20
+//        anim.repeatMode = Animation.REVERSE
+//        anim.repeatCount = Animation.INFINITE
+//        buttonBlink.startAnimation(anim)
+//    }
 
     inner class DownloadingPlantTask : AsyncTask<String, Int, List<Plant>>() {
 
@@ -261,22 +258,21 @@ class MainActivity : AppCompatActivity() {
         return result
     }
 
-     private fun RightOrWrong(userguess: Int) {
+    private fun RightOrWrong(userguess: Int) {
+
+//        val drawable: Drawable =
+//            this@MainActivity.getResources().getDrawable(R.drawable.oval, this.getTheme())
 
 
-         when (correctAnswerIndex) {
-             0 -> button1.setBackgroundColor(Color.GREEN)
-             1 -> button2.setBackgroundColor(Color.GREEN)
-             2 -> button3.setBackgroundColor(Color.GREEN)
-             3 -> button4.setBackgroundColor(Color.GREEN)
-         }
         if (userguess == correctAnswerIndex) {
+            animatedButton(true)
             txtState.setText("Right Answer!!")
 
             AnsweredCorrectly++
             txtRightAns.setText("$AnsweredCorrectly")
 
         } else {
+            animatedButton(false)
             var correctPlantName = correctPlant.toString()
             txtState.setText("Wrong!! Answer is :  $correctPlantName")
 
@@ -306,6 +302,7 @@ class MainActivity : AppCompatActivity() {
             super.onPostExecute(result)
 
             setProgressBar(false)
+            displayUIWidgets(true)
             imgTaken?.setImageBitmap(result)
         }
     }
@@ -331,6 +328,61 @@ class MainActivity : AppCompatActivity() {
 
 
         }
+    }
+
+
+    private fun animatedButton(animate: Boolean) {
+        val anim: Animation = AlphaAnimation(0.0f, 1.0f)
+        anim.duration = 50 //You can manage the blinking time with this parameter
+
+        anim.startOffset = 20
+        anim.repeatMode = Animation.REVERSE
+        anim.repeatCount = Animation.INFINITE
+
+        when (correctAnswerIndex) {
+            0 -> button1.startAnimation(anim)
+            1 -> button2.startAnimation(anim)
+            2 -> button3.startAnimation(anim)
+            3 -> button4.startAnimation(anim)
+        }
+    }
+
+    // Set Visibility of ui widgets
+    private fun displayUIWidgets(display: Boolean) {
+
+        if (display) {
+
+            imgTaken?.setVisibility(View.VISIBLE)
+            button1.setVisibility(View.VISIBLE)
+            button2.setVisibility(View.VISIBLE)
+            button3.setVisibility(View.VISIBLE)
+            button4.setVisibility(View.VISIBLE)
+            txtState.setVisibility(View.VISIBLE)
+            txtWrongAns.setVisibility(View.VISIBLE)
+            txtRightAns.setVisibility(View.VISIBLE)
+            txtRight.setVisibility(View.VISIBLE)
+            txtWrong.setVisibility(View.VISIBLE)
+
+        } else if (!display) {
+
+            imgTaken?.setVisibility(View.INVISIBLE)
+            button1.setVisibility(View.INVISIBLE)
+            button2.setVisibility(View.INVISIBLE)
+            button3.setVisibility(View.INVISIBLE)
+            button4.setVisibility(View.INVISIBLE)
+            txtState.setVisibility(View.INVISIBLE)
+            txtWrongAns.setVisibility(View.INVISIBLE)
+            txtRightAns.setVisibility(View.INVISIBLE)
+            txtRight.setVisibility(View.INVISIBLE)
+            txtWrong.setVisibility(View.INVISIBLE)
+        }
+    }
+
+    private fun animate(view: View?, techniques: Techniques){
+        YoYo.with(techniques)
+            .duration(700)
+            .repeat(0)
+            .playOn(view)
     }
 }
 
